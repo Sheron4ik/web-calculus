@@ -32,10 +32,15 @@ func applyOperation(first, second float64, op string) (float64, error) {
 		}
 		return first / second, nil
 	}
+
 	return 0, errors.ErrUnknownOperations
 }
 
 func parse(expression string) ([]string, error) {
+	if expression == "" {
+		return nil, errors.ErrEmptyExpression
+	}
+
 	polka := make([]string, 0)
 	sign_stack := make([]string, 0)
 	for _, ch := range expression {
@@ -62,6 +67,7 @@ func parse(expression string) ([]string, error) {
 			polka = append(polka, string(ch))
 		}
 	}
+
 	for len(sign_stack) > 0 {
 		if sign_stack[len(sign_stack)-1] == "(" {
 			return nil, errors.ErrMissingCloseBracket
@@ -90,11 +96,12 @@ func getCalc(polka []string) (float64, error) {
 		} else {
 			num, err := strconv.ParseFloat(ch, 64)
 			if err != nil {
-				return float64(0), err
+				return float64(0), errors.ErrUnknownOperations
 			}
 			res = append(res, num)
 		}
 	}
+
 	if len(res) != 1 {
 		return float64(0), errors.ErrInvalidExpression
 	}
