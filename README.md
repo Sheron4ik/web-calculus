@@ -5,12 +5,16 @@
 
 ## Запуск
 
-`go run ./cmd/main.go` default `PORT=8080`
-<br>или<br>
-`export PORT=your_port && go run ./cmd/main.go`
+```
+go run ./cmd/main.go
+```
+default `PORT=8080` или
+```
+export PORT=your_port && go run ./cmd/main.go
+```
 
 ## Использование
 
-`
+```
 curl --location 'localhost/api/v1/calculate' --header 'Content-Type: application/json' --data '{"expression": "1+2*(8-3)/5"}'
-`
+```
