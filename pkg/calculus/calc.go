@@ -1,8 +1,9 @@
 package calculus
 
 import (
-	"fmt"
 	"strconv"
+
+	"github.com/Sheron4ik/web-calculus/pkg/errors"
 )
 
 var priority = map[string]int{
@@ -27,11 +28,11 @@ func applyOperation(first, second float64, op string) (float64, error) {
 		return first * second, nil
 	case "/":
 		if second == 0 {
-			return 0, fmt.Errorf("invalid expression")
+			return 0, errors.ErrDivideByZero
 		}
 		return first / second, nil
 	}
-	return 0, fmt.Errorf("what")
+	return 0, errors.ErrUnknownOperations
 }
 
 func parse(expression string) ([]string, error) {
@@ -55,7 +56,7 @@ func parse(expression string) ([]string, error) {
 			if len(sign_stack) > 0 && sign_stack[len(sign_stack)-1] == "(" {
 				sign_stack = sign_stack[:len(sign_stack)-1]
 			} else {
-				return nil, fmt.Errorf("invalid expression")
+				return nil, errors.ErrMissingOpenBracket
 			}
 		default:
 			polka = append(polka, string(ch))
@@ -63,7 +64,7 @@ func parse(expression string) ([]string, error) {
 	}
 	for len(sign_stack) > 0 {
 		if sign_stack[len(sign_stack)-1] == "(" {
-			return nil, fmt.Errorf("invalid expression")
+			return nil, errors.ErrMissingCloseBracket
 		}
 		polka = append(polka, sign_stack[len(sign_stack)-1])
 		sign_stack = sign_stack[:len(sign_stack)-1]
@@ -76,7 +77,7 @@ func getCalc(polka []string) (float64, error) {
 	for _, ch := range polka {
 		if isOperation(ch) {
 			if len(res) < 2 {
-				return float64(0), fmt.Errorf("invalid expression")
+				return float64(0), errors.ErrInvalidExpression
 			}
 			second := res[len(res)-1]
 			first := res[len(res)-2]
@@ -95,7 +96,7 @@ func getCalc(polka []string) (float64, error) {
 		}
 	}
 	if len(res) != 1 {
-		return float64(0), fmt.Errorf("invalid expression")
+		return float64(0), errors.ErrInvalidExpression
 	}
 	return res[0], nil
 }
