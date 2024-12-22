@@ -16,9 +16,9 @@ export PORT=your_port && go run ./cmd/main.go
 ## Использование
 
 ```
-curl --location 'localhost/api/v1/calculate' \
+curl --location 'localhost:PORT/api/v1/calculate' \
 --header 'Content-Type: application/json' \
 --data '{
-  "expression": "2+2*2"
+  "expression": "1+2*(8-3)/5"
 }'
 ```
