@@ -116,3 +116,10 @@ func (c *Calculator) UpdateTask(id int64, result float64) bool {
 	}
 	return false
 }
+
+func (c *Calculator) GetResult() (float64, bool) {
+	if len(c.tasks) > 0 && c.tasks[len(c.tasks)-1].Type == TaskNumber {
+		return c.tasks[len(c.tasks)-1].Value, true
+	}
+	return 0, false
+}

@@ -49,6 +49,14 @@ func HandleListExpressions(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"expressions": "empty list expressions"})
 	}
 
+	for idx, calc := range orchestrator.Calcs {
+		if orchestrator.Exprs[idx].Status == models.InProgress {
+			if result, success := calc.GetResult(); success {
+				orchestrator.Exprs[idx].Status = models.Completed
+				orchestrator.Exprs[idx].Result = result
+			}
+		}
+	}
 	return c.JSON(http.StatusOK, map[string][]*models.Expression{"expressions": orchestrator.Exprs})
 }
 
@@ -65,6 +73,10 @@ func HandleGetExpression(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "expression does not exist"})
 	}
 
+	if result, success := orchestrator.Calcs[id-1].GetResult(); success {
+		orchestrator.Exprs[id-1].Status = models.Completed
+		orchestrator.Exprs[id-1].Result = result
+	}
 	return c.JSON(http.StatusOK, map[string]*models.Expression{"expression": orchestrator.Exprs[id-1]})
 }
 
