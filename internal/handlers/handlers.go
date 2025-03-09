@@ -143,28 +143,19 @@ func HandleGetTask(c echo.Context) error {
 
 func HandleUpdateTask(c echo.Context) error {
 	var req struct {
-		ID     string `json:"id"`
-		Result string `json:"result"`
+		ID     int64   `json:"id"`
+		Result float64 `json:"result"`
 	}
 
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "invalid request"})
 	}
 
-	id, err := strconv.Atoi(req.ID)
-	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": "invalid id"})
-	}
-	result, err := strconv.ParseFloat(req.Result, 64)
-	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": "invalid result"})
-	}
-
 	orchestrator.Mu.RLock()
 	defer orchestrator.Mu.RUnlock()
 
 	for _, calc := range orchestrator.Calcs {
-		if success := calc.UpdateTask(int64(id), result); success {
+		if success := calc.UpdateTask(req.ID, req.Result); success {
 			return c.JSON(http.StatusOK, map[string]string{"status": "success"})
 		}
 	}
