@@ -4,10 +4,10 @@ import "os"
 
 var defaultCfg = map[string]string{
 	"PORT":                    "8080",
-	"TIME_ADDITION_MS":        "500",
-	"TIME_SUBTRACTION_MS":     "500",
-	"TIME_MULTIPLICATIONS_MS": "1000",
-	"TIME_DIVISIONS_MS":       "1250",
+	"TIME_ADDITION_MS":        "1000",
+	"TIME_SUBTRACTION_MS":     "1000",
+	"TIME_MULTIPLICATIONS_MS": "2000",
+	"TIME_DIVISIONS_MS":       "2500",
 	"COMPUTING_POWER":         "3",
 }
 
