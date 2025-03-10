@@ -5,9 +5,17 @@
 ## **Backend часть** 
 состоит из 2 элементов:
 * Оркестратора - сервер, который принимает арифметическое выражение, переводит его в набор последовательных задач и обеспечивает порядок их выполнения.
-* Агента - вычислитель, который может получить от оркестратора задачу, выполнить его и вернуть серверу результат.
+* Агента - вычислитель, который может получить от оркестратора задачу, выполнить ее и вернуть серверу результат.
 
 Также, весь сервис покрыт тестами.
+
+```mermaid
+flowchart LR
+    A[Клиент] -->|http/отправляет выражение(-я)| Б[Оркестратор]
+    Б -->|http/отдает задачки| В[Агент(-ы)]
+    В -->|http/отправляет(-ют) ответ(-ы)| Б
+    Б -->|http/отправляет статус выполнения и результат| A
+```
 
 ## Запуск
 ### оркестратора:
@@ -35,11 +43,13 @@ TIME_DIVISIONS_MS=your_time_div \
 go run ./cmd/agent/main.go
 ```
 default 
+* `PORT=8080`
 * `COMPUTING_POWER=3`
 
 или
 ```
-export COMPUTING_POWER=your_power \
+export PORT=listen_port \
+COMPUTING_POWER=your_power \
 && go run ./cmd/agent/main.go
 ```
 
@@ -67,9 +77,9 @@ curl --location 'localhost:PORT/api/v1/calculate' \
 ```
 curl --location 'localhost:PORT/api/v1/calculate' \
 --header 'Content-Type: application/json' \
---data '{
+--data "{
   "pedro": "pe"
-}'
+}"
 ```
 
 ### GET /api/v1/expressions
