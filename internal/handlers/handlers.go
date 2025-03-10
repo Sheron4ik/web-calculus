@@ -148,7 +148,7 @@ func HandleUpdateTask(c echo.Context) error {
 	}
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "invalid request"})
+		return c.JSON(http.StatusUnprocessableEntity, map[string]string{"error": "invalid request"})
 	}
 
 	orchestrator.Mu.RLock()
